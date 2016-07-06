@@ -1,12 +1,7 @@
 var redux = require('redux');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-};
-var nextHobbyId = 1;
-var nextMovieId = 1;
+//Name reducer and action generators
+
 
 var nameReducer = (state = 'Anonymous', action) => {
   switch (action.type) {
@@ -16,7 +11,14 @@ var nameReducer = (state = 'Anonymous', action) => {
     return state;
   }
 };
-
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  }
+};
+//Hobbies reducer and action generators
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_HOBBY':
@@ -33,7 +35,21 @@ var hobbiesReducer = (state = [], action) => {
     return state;
   }
 };
+var addHobby = (hobby) => {
+  return {
+    hobby,
+    type: 'ADD_HOBBY'
+  };
+};
+var removeHobby = (id) => {
+  return {
+    id,
+    type: 'REMOVE_HOBBY'
+  };
+};
 
+//Movies reducer and action generators
+var nextMovieId = 1;
 var moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_MOVIES':
@@ -51,7 +67,20 @@ var moviesReducer = (state = [], action) => {
     return state;
   }
 };
+var addMovie = (title, genre) => {
+  return {
+    title,
+    genre,
+    type: 'ADD_MOVIES'
+  };
+};
 
+var removeMovie = (id) => {
+  return {
+    id,
+    type: 'REMOVE_MOVIES'
+  };
+};
 
 var reducer = redux.combineReducers({
   name: nameReducer,
@@ -68,52 +97,25 @@ var unsubscribe = store.subscribe(() => {
   console.log('Name is', state.name);
   document.getElementById('app').innerHTML = state.name;
 
-  console.log('New state', state.hobbies);
-  console.log('New Movie', state.movies);
+  console.log('New Hobbies', state.hobbies);
+  console.log('New Movies', state.movies);
 })
 
 var currentState = store.getState();
 console.log('current State', currentState);
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Nassir'
-});
+store.dispatch(changeName('Nassir'));
 
 // unsubscribe();
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Running'
-});
+store.dispatch(addHobby('Running'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'walking'
-});
+store.dispatch(addHobby('Walking'));
 
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-})
-store.dispatch({
-  type: 'ADD_MOVIES',
-  title: 'SNITCH',
-  genre: 'ACTION'
-});
+store.dispatch(removeHobby(2));
+store.dispatch(addMovie('Snitch', 'Action'));
 
-store.dispatch({
-  type: 'ADD_MOVIES',
-  title: 'SNOW',
-  genre: 'COMEDY'
-});
+store.dispatch(addMovie('Frozen', 'Animation'));
 
-store.dispatch({
-  type: 'REMOVE_MOVIES',
-  id: 2
-});
+store.dispatch(removeMovie(2));
 
-
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'DJAMILLA'
-})
+store.dispatch(changeName('DJAMILLA'));
