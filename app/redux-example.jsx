@@ -13,7 +13,16 @@ var reducer = (state = { name: 'Anonymous' }, action) => {
   }
 }
 
-var store = redux = redux.createStore(reducer);
+var store = redux = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
+
+//subscribe to changes
+var unsubscribe = store.subscribe(() => {
+  var state = store.getState();
+  console.log('Name is', state.name);
+  document.getElementById('app').innerHTML = state.name;
+})
 
 var currentState = store.getState();
 console.log('current State', currentState);
@@ -25,6 +34,9 @@ var action = {
 
 store.dispatch(action);
 
-console.log('Name should be andrew', store.getState());
+// unsubscribe();
 
-//only requirement of our actions are their type property
+store.dispatch({
+  type: 'CHANGE_NAME',
+  name: 'DJAMILLA'
+})
