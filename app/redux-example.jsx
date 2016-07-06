@@ -1,13 +1,42 @@
 var redux = require('redux');
 
-var reducer = (state = { name: 'Anonymous' }, action) => {
-  console.log('New Action', action);
+var stateDefault = {
+  name: 'Anonymous',
+  hobbies: [],
+  movies: []
+};
+var nextHobbyId = 1;
+var nextMovieId = 1;
+var reducer = (state = stateDefault, action) => {
   switch (action.type) {
     case 'CHANGE_NAME':
     return {
       ...state,
       name: action.name
     };
+    case 'ADD_HOBBY':
+    return {
+      ...state,
+      hobbies: [
+        ...state.hobbies,
+        {
+          hobby: action.hobby,
+          id: nextHobbyId++
+        }
+      ]
+    };
+    case 'ADD_MOVIES':
+    return {
+      ...state,
+      movies: [
+        ...state.movies,
+        {
+          title: action.title,
+          genre: action.genre,
+          id: nextMovieId++
+        }
+      ]
+    }
     default:
     return state;
   }
@@ -22,19 +51,31 @@ var unsubscribe = store.subscribe(() => {
   var state = store.getState();
   console.log('Name is', state.name);
   document.getElementById('app').innerHTML = state.name;
+
+  console.log('New state', state.hobbies);
+  console.log('New Movie', state.movies);
 })
 
 var currentState = store.getState();
 console.log('current State', currentState);
 
-var action = {
+store.dispatch({
   type: 'CHANGE_NAME',
   name: 'Nassir'
-};
-
-store.dispatch(action);
+});
 
 // unsubscribe();
+store.dispatch({
+  type: 'ADD_HOBBY',
+  hobby: 'Running'
+});
+
+store.dispatch({
+  type: 'ADD_MOVIES',
+  title: 'SNITCH',
+  genre: 'ACTION'
+});
+
 
 store.dispatch({
   type: 'CHANGE_NAME',
